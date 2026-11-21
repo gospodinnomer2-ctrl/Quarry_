@@ -1,1 +1,1 @@
-{"providers":[{"type":"ttf","file":"quarry_client:inter_medium.otf","size":10.5,"oversample":6.0,"shift":[0.0,0.0]},{"type":"reference","id":"minecraft:default"}]}
+{"providers":[{"type":"ttf","file":"quarry_client:inter_medium.ttf","size":10.5,"oversample":6.0,"shift":[0.0,0.0]},{"type":"reference","id":"minecraft:default"}]}
