@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -131,7 +132,9 @@ public class QuarryClient implements ClientModInitializer {
 
         // след из частиц; частицы создаются «принудительно», поэтому видны и при минимуме частиц в настройках игры
         boolean moving = p.getDeltaMovement().horizontalDistanceSqr() > 0.0004;
-        if (Config.get("trail") && !mc.isPaused() && (moving || Config.setting("trail", "still") == 1)) {
+        // трейл виден только от третьего лица (F5), от первого лица частицы закрывали бы обзор
+        if (Config.get("trail") && !mc.isPaused() && !mc.options.getCameraType().isFirstPerson()
+                && (moving || Config.setting("trail", "still") == 1)) {
             int kind = Config.setting("trail", "type");
             ParticleOptions type = trailType(kind);
             int n = Config.setting("trail", "density");
@@ -141,6 +144,18 @@ public class QuarryClient implements ClientModInitializer {
                 double rz = (mc.level.getRandom().nextDouble() - 0.5) * 0.6;
                 mc.levelRenderer.addParticle(type, true, p.getX() + rx, p.getY() + ry, p.getZ() + rz,
                         kind == 5 ? mc.level.getRandom().nextDouble() : 0.0, kind == 0 ? 0.0 : 0.01, 0.0);
+            }
+        }
+
+        // снег в мире: хлопья падают вокруг игрока, но только там, где над головой открытое небо
+        if (Config.get("christmas") && Config.setting("christmas", "world_snow") == 1 && !mc.isPaused()) {
+            int flakes = Math.max(1, Config.setting("christmas", "density") / 9);
+            for (int i = 0; i < flakes; i++) {
+                double sx = p.getX() + (mc.level.getRandom().nextDouble() - 0.5) * 36.0;
+                double sz = p.getZ() + (mc.level.getRandom().nextDouble() - 0.5) * 36.0;
+                double sy = p.getY() - 2.0 + mc.level.getRandom().nextDouble() * 10.0;
+                if (!mc.level.canSeeSky(BlockPos.containing(sx, sy, sz))) continue;
+                mc.levelRenderer.addParticle(ParticleTypes.SNOWFLAKE, true, sx, sy, sz, 0.0, 0.0, 0.0);
             }
         }
     }

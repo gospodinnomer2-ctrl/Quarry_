@@ -18,6 +18,11 @@ public class Combat {
     public static double reach = 0;
     public static LivingEntity target = null;
 
+    /** Когда цель последний раз была под прицелом (мс), нужно для плавного затухания ESP. */
+    public static long seenMs() {
+        return targetSeen;
+    }
+
     private static long lastHitMs = 0, lastAttackMs = 0, targetSeen = 0;
     private static boolean prevAttack = false;
     private static int prevSelfHurt = 0;

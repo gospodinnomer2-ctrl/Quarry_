@@ -35,13 +35,13 @@ public class Config {
         {"Interface", "hud_combo", "Combo", "Сколько ударов подряд вы нанесли"},
         {"Interface", "hud_reach", "Reach", "С какого расстояния был последний удар"},
         {"Interface", "hud_cooldowns", "Cooldowns", "Перезарядка жемчуга, яблок, щита"},
-        {"Visuals", "christmas", "Christmas", "Новый год: снег, гирлянда и шапка Санты на игроках"},
-        {"Visuals", "trail", "Trail", "Частицы за вашим персонажем"},
+        {"Visuals", "christmas", "Christmas", "Новый год: снег в мире и в меню, гирлянда, шапка Санты на игроках"},
+        {"Visuals", "trail", "Trail", "Частицы за вашим персонажем (видны только в режиме F5)"},
         {"Visuals", "zoom", "Zoom", "Приближение по зажатой клавише C"},
         {"Visuals", "ring", "Crosshair Ring", "Цветное кольцо вокруг прицела"},
         {"Visuals", "edge_glow", "Edge Glow", "Подсветка сверху и снизу экрана"},
         {"Visuals", "hitbox", "Hitboxes", "Контуры существ, не видны сквозь стены"},
-        {"Visuals", "target_esp", "Target ESP", "Пунктирная рамка вокруг цели под прицелом"},
+        {"Visuals", "target_esp", "Target ESP", "Эффект вокруг цели: призраки, ромбы, кольцо, шары или рамка"},
         {"Visuals", "hit_fx", "Hit Effects", "Частицы при вашем ударе по цели"},
         {"Helper", "sprint", "Auto Sprint", "Бег без зажатия клавиши, как «Переключение спринта»"},
         {"Helper", "norender", "NoRender", "Убирает огонь перед лицом, тряску и эффекты поля зрения"},
@@ -58,6 +58,17 @@ public class Config {
         return new String[]{"Theme", "White", "Red", "Green"};
     }
 
+    /** Цвет ESP: «Theme» (текущая тема), все цвета тем, белый и радуга. */
+    private static String[] espColors() {
+        String[] names = {"Ember", "Christmas", "Pine", "Gold", "Rose", "Owl", "Violet", "Ocean"};
+        String[] out = new String[names.length + 3];
+        out[0] = "Theme";
+        System.arraycopy(names, 0, out, 1, names.length);
+        out[names.length + 1] = "White";
+        out[names.length + 2] = "Rainbow";
+        return out;
+    }
+
     private static String[] offKeep() {
         return new String[]{"Disable", "Keep"};
     }
@@ -70,6 +81,7 @@ public class Config {
         Map.entry("christmas", List.of(
             new Setting("menu_snow", "Menu Snow", onOff(), 0, 0, 1),
             new Setting("inv_snow", "Inventory Snow", onOff(), 0, 0, 1),
+            new Setting("world_snow", "World Snow", onOff(), 0, 0, 1),
             new Setting("hat_self", "Santa Hat (Me)", onOff(), 0, 0, 1),
             new Setting("hat_others", "Santa Hat (Others)", onOff(), 0, 0, 1),
             new Setting("garland", "Garland", onOff(), 0, 0, 1),
@@ -87,10 +99,12 @@ public class Config {
             new Setting("alpha", "Opacity", null, 20, 100, 100),
             new Setting("range", "Range", null, 8, 64, 32))),
         Map.entry("target_esp", List.of(
-            new Setting("style", "Line Style", new String[]{"Dashed", "Solid"}, 0, 0, 0),
-            new Setting("color", "Color", colors(), 0, 0, 0),
-            new Setting("dash", "Dash Length", null, 4, 30, 14),
-            new Setting("speed", "Run Speed", null, 0, 20, 8))),
+            new Setting("style", "Style", new String[]{"Ghosts", "Diamond", "Diamonds", "Halo", "Orbs", "Dashed Box", "Solid Box"}, 0, 0, 0),
+            new Setting("color", "Color", espColors(), 0, 0, 0),
+            new Setting("dust", "Floating Dots", onOff(), 0, 0, 1),
+            new Setting("size", "Size", null, 5, 20, 10),
+            new Setting("speed", "Speed", null, 0, 20, 8),
+            new Setting("dash", "Box Dash Length", null, 4, 30, 14))),
         Map.entry("hit_fx", List.of(
             new Setting("type", "Particle", new String[]{"Crit", "Sparks", "Hearts", "Fire", "Enchant"}, 0, 0, 0),
             new Setting("count", "Amount", null, 1, 12, 6))),
